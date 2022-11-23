@@ -6,6 +6,7 @@ const { HttpStatusCode } = require('../utils/HttpStatusCode');
 const { HTTP401Error } = require('../errors/HTTP401Error');
 const { HTTP409Error } = require('../errors/HTTP409Error');
 const { HTTP404Error } = require('../errors/HTTP404Error');
+const { logNow } = require('../utils/log');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -14,11 +15,9 @@ module.exports.createUser = async (req, res, next) => {
     const hash = await bcrypt.hash(req.body.password, 10); // 𓃦 ⑰ ♡
     const user = await User.create({ ...req.body, password: hash });
     const {
-      name, about, avatar, _id,
+      name, email, _id
     } = user;
-    res.status(HttpStatusCode.OK).send({
-      name, about, avatar, _id,
-    });
+    res.status(HttpStatusCode.OK).send({ name, email, id: _id });
   } catch (error) {
     if (error.name === 'MongoServerError' || error.message.includes('11000')) {
       next(new HTTP409Error(`${req.body.email} уже зарегестрирован`));
@@ -28,14 +27,26 @@ module.exports.createUser = async (req, res, next) => {
   }
 };
 
+module.exports.getUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    res.send({ users });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports.getCurrentUser = async (req, res, next) => {
   try {
+    logNow('USER REQUEST: ', req.user);
     const user = await User.findById(req.user._id);
     if (!user) {
       next(new HTTP404Error(`Пользователь с id ${req.user._id} не найден`));
       return;
     }
-    res.status(HttpStatusCode.OK).send(user);
+    const { name, email, _id } = user;
+
+    res.status(HttpStatusCode.OK).send({ name, email, id: _id});
   } catch (error) {
     next(error);
   }
@@ -47,7 +58,9 @@ module.exports.updateUser = async (req, res, next) => {
       new: true,
       runValidators: true,
     });
-    res.send(user);
+    const { name, email, _id } = user;
+
+    res.send({ name, email, id: _id});
   } catch (error) {
     next(error);
   }

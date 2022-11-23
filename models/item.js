@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const itemSchema = new mongoose.Schema({
-  description: {
+  task: {
     type: String,
     required: true,
     minlength: 2,
@@ -18,4 +18,4 @@ const itemSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('item', cardSchema);
+module.exports = mongoose.model('item', itemSchema);

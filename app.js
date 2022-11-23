@@ -7,7 +7,7 @@ const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
-// const routes = require('./routes');
+const routes = require('./routes');
 // const cors = require('./middlewares/cors');
 const { logNow, logError } = require('./utils/log');
 // const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -37,7 +37,7 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// app.use(routes);
+app.use(routes);
 
 // app.use(errorLogger);
 app.use(errors());
