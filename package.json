@@ -4,7 +4,9 @@
   "description": "Тестовое задание. ## ⚙️ Функционал: * Регистрация/авторизация пользователя. При авторизации пользователь на клиент получает JWT из которого можно получить id пользователя. * Авторизованному пользователю доступны CRUD endpoints для сущности todo (должен быть middleware в котором будет проверка валидного токена) * Доступно получение todo как все разом, так и постранично. Возможны фильтры",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "npx eslint .",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,26 @@
   "bugs": {
     "url": "https://github.com/auroraptor/november-26/issues"
   },
-  "homepage": "https://github.com/auroraptor/november-26#readme"
+  "homepage": "https://github.com/auroraptor/november-26#readme",
+  "devDependencies": {
+    "eslint": "^8.25.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.1",
+    "celebrate": "^15.0.1",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "express-winston": "^4.2.0",
+    "helmet": "^6.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.6.5",
+    "validator": "^13.7.0",
+    "winston": "^3.8.2"
+  }
 }
