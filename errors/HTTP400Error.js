@@ -4,7 +4,7 @@ class HTTP401Error extends Error {
   constructor(message) {
     super(message);
     this.name = 'Bad Request';
-    this.statusCode = HttpStatusCode.UNAUTHORIZED;
+    this.statusCode = HttpStatusCode.BAD_REQUEST;
   }
 }
 
