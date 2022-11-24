@@ -25,6 +25,18 @@ module.exports.getItems = async (req, res, next) => {
   }
 };
 
+module.exports.paginItems = async (req, res, next) => {
+  const { pageSize } = req.body;
+  const { page } = req.params;
+  try{
+     const items = await Item.find().skip(page > 0 ? ((page - 1) * pageSize) : 0).limit(pageSize);
+     const resItems = items.map(item => ({task: item.task, itemId: item._id, owner: item.owner}))
+     res.status(HttpStatusCode.OK).send(resItems);
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports.updateItem = async (req, res, next) => {
   try {
     const item = await Item.findByIdAndUpdate(
