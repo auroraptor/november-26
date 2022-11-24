@@ -8,4 +8,4 @@ class HTTP400Error extends Error {
   }
 }
 
-module.exports = { HTTP401Error };
+module.exports = { HTTP400Error };
