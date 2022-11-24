@@ -11,7 +11,7 @@ const routes = require('./routes');
 // const cors = require('./middlewares/cors');
 const { logNow, logError } = require('./utils/log');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-// const { errorHandler } = require('./middlewares/errorHandler');
+const { errorHandler } = require('./middlewares/errorHandler');
 
 const app = express();
 
@@ -41,7 +41,7 @@ app.use(routes);
 
 app.use(errorLogger);
 app.use(errors());
-// app.use(errorHandler);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   logNow(`App server listening on port ${PORT}`);

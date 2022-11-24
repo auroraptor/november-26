@@ -12,10 +12,10 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.createUser = async (req, res, next) => {
   try {
-    const hash = await bcrypt.hash(req.body.password, 10); // 𓃦 ⑰ ♡
+    const hash = await bcrypt.hash(req.body.password, 10);
     const user = await User.create({ ...req.body, password: hash });
     const {
-      name, email, _id
+      name, email, _id,
     } = user;
     res.status(HttpStatusCode.OK).send({ name, email, id: _id });
   } catch (error) {
@@ -46,7 +46,7 @@ module.exports.getCurrentUser = async (req, res, next) => {
     }
     const { name, email, _id } = user;
 
-    res.status(HttpStatusCode.OK).send({ name, email, id: _id});
+    res.status(HttpStatusCode.OK).send({ name, email, id: _id });
   } catch (error) {
     next(error);
   }
@@ -60,7 +60,7 @@ module.exports.updateUser = async (req, res, next) => {
     });
     const { name, email, _id } = user;
 
-    res.send({ name, email, id: _id});
+    res.send({ name, email, id: _id });
   } catch (error) {
     next(error);
   }
@@ -74,7 +74,7 @@ module.exports.login = async (req, res, next) => {
       next(new HTTP401Error('Неправильные почта или пароль'));
       return;
     }
-    const matched = bcrypt.compare(password, user.password);
+    const matched = await bcrypt.compare(password, user.password);
     if (!matched) {
       next(new HTTP401Error('Неправильные почта или пароль'));
       return;

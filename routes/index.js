@@ -2,12 +2,12 @@ const router = require('express').Router();
 const userRouter = require('./users');
 const itemRouter = require('./items');
 const auth = require('../middlewares/auth');
-// const { validateUserBody, validateAuth } = require('../middlewares/validate');
+const { validateUserBody, validateAuth } = require('../middlewares/validate');
 const { login, createUser } = require('../controllers/users');
 const { HTTP404Error } = require('../errors/HTTP404Error');
 
-router.post('/signup', createUser);
-router.post('/signin', login);
+router.post('/signup', validateUserBody, createUser);
+router.post('/signin', validateAuth, login);
 router.use('/', auth);
 router.use('/users', userRouter);
 router.use('/items', itemRouter);
