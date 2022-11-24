@@ -1,6 +1,6 @@
 const { HttpStatusCode } = require('../utils/HttpStatusCode');
 
-class HTTP401Error extends Error {
+class HTTP400Error extends Error {
   constructor(message) {
     super(message);
     this.name = 'Bad Request';
