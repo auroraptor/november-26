@@ -37,6 +37,22 @@ module.exports.paginItems = async (req, res, next) => {
   }
 }
 
+// TODO
+// module.exports.getItemsByCreatedDate = async (req, res, next) => {
+//   const { date } = req.params;
+//   const dateParse = Date.parse(`${date} 00:00:00`);
+//   const { timestamp } = req.body;
+//   const endTime = dateParse + 3600 * 24 * timestamp * 1000;
+
+//   try{
+//      const items = await Item.find({'createdAt': { $gte: new Date(date).toISOString(), $lt: new Date(endTime).toISOString()}});
+//      const resItems = items.map(item => ({task: item.task, itemId: item._id, owner: item.owner}))
+//      res.status(HttpStatusCode.OK).send(resItems);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 module.exports.updateItem = async (req, res, next) => {
   try {
     const item = await Item.findByIdAndUpdate(
