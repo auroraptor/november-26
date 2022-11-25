@@ -6,7 +6,6 @@ const { HttpStatusCode } = require('../utils/HttpStatusCode');
 const { HTTP401Error } = require('../errors/HTTP401Error');
 const { HTTP409Error } = require('../errors/HTTP409Error');
 const { HTTP404Error } = require('../errors/HTTP404Error');
-const { logNow } = require('../utils/log');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -99,7 +98,6 @@ module.exports.login = async (req, res, next) => {
       next(new HTTP401Error('Неправильные почта или пароль'));
       return;
     }
-    logNow(user._id);
     const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : '🔐', { expiresIn: '7d' });
 
     res.status(HttpStatusCode.OK).cookie('jwt', token, {
