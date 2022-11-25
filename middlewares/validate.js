@@ -28,14 +28,15 @@ module.exports.validateUser = celebrate({
   }),
 });
 
-module.exports.validateItem = celebrate({
+module.exports.validateTask = celebrate({
   body: Joi.object().keys({
-    task: Joi.string().required().min(2).max(120),
+    name: Joi.string().required().min(2).max(30),
+    description: Joi.string().min(2).max(120),
   }),
 });
 
-module.exports.validateItemId = celebrate({
+module.exports.validateTaskId = celebrate({
   params: Joi.object().keys({
-    itemId: Joi.string().pattern(/[a-f0-9]{24,24}/).length(24),
+    taskId: Joi.string().pattern(/[a-f0-9]{24,24}/).length(24),
   }),
 });

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const userRouter = require('./users');
-const itemRouter = require('./items');
+const taskRouter = require('./tasks');
 const auth = require('../middlewares/auth');
 const { validateUserBody, validateAuth } = require('../middlewares/validate');
 const { login, createUser } = require('../controllers/users');
@@ -10,7 +10,7 @@ router.post('/signup', validateUserBody, createUser);
 router.post('/signin', validateAuth, login);
 router.use('/', auth);
 router.use('/users', userRouter);
-router.use('/items', itemRouter);
+router.use('/tasks', taskRouter);
 router.post('/signout', (req, res) => {
   res.clearCookie('jwt').send({ message: '🍪 cleared' }).end();
 });
