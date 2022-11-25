@@ -1,14 +1,9 @@
-/* eslint-disable max-len */
 const Task = require('../models/task');
 
 const { HttpStatusCode } = require('../utils/HttpStatusCode');
 const { HTTP404Error } = require('../errors/HTTP404Error');
 const { HTTP403Error } = require('../errors/HTTP403Error');
 
-/**  Создание нового айтема
- * req.body {string} - текст задачи
- * req.user._id {string} - айди пользователя
-*/
 module.exports.createTask = async (req, res, next) => {
   try {
     const data = await Task.create({ ...req.body, createdBy: req.user._id });
@@ -30,9 +25,7 @@ module.exports.getTasks = async (req, res, next) => {
   try {
     const pageSize = req.query.pageSize ? parseInt(req.query.pageSize, 10) : 0;
     const page = req.query.page ? parseInt(req.query.page, 10) : 0;
-
     const { name, description } = req.query;
-
     const filter = {};
 
     if (name) filter.name = name;
@@ -52,10 +45,12 @@ module.exports.getTasks = async (req, res, next) => {
   }
 };
 
-/**  апдейт текста айтема */
 module.exports.updateTask = async (req, res, next) => {
   try {
-    const item = await Task.findByIdAndUpdate(req.params.taskId, req.body, { new: true, runValidators: true });
+    const item = await Task.findByIdAndUpdate(req.params.taskId, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (item === null) {
       next(new HTTP404Error(`Задача с id ${req.params.taskId} не найдена`));
@@ -68,10 +63,6 @@ module.exports.updateTask = async (req, res, next) => {
   }
 };
 
-/**  удалять айтем
- * проверять создателя айтема по совпадению id чтобы у пользователя
- * не было возможности удалить списки других пользователей
-*/
 module.exports.removeTask = async (req, res, next) => {
   try {
     const item = await Task.findById(req.params.TaskId);

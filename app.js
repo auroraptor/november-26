@@ -8,9 +8,9 @@ const { errors } = require('celebrate');
 const cors = require('cors');
 const routes = require('./routes');
 const limiter = require('./middlewares/limiter');
-const { logNow, logError } = require('./utils/log');
+const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { errorHandler } = require('./middlewares/errorHandler');
+const { logNow, logError } = require('./utils/log');
 
 const app = express();
 

@@ -9,6 +9,11 @@ const { HTTP404Error } = require('../errors/HTTP404Error');
 router.post('/signup', validateUserBody, createUser);
 router.post('/signin', validateAuth, login);
 router.use('/', auth);
+
+// router.post('/upload', uploadFiles);
+// router.get('/files', getImages);
+// router.get('/files/:name', downloadImage);
+
 router.use('/users', userRouter);
 router.use('/tasks', taskRouter);
 router.post('/signout', (req, res) => {

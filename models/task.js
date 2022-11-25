@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const randomEmoji = require('../utils/randomEmoji');
 
 const taskSchema = new mongoose.Schema(
   {
@@ -10,7 +11,7 @@ const taskSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      default: 'Todo',
+      default: randomEmoji,
       minlength: 2,
       maxlength: 120,
     },
@@ -19,14 +20,6 @@ const taskSchema = new mongoose.Schema(
       ref: 'user',
       required: true,
     },
-  // createAt: {
-  //   type: Date,
-  //   default: Date.now,
-  // },
-  // updateAt: {
-  //   type: Date,
-  //   default: Date.now,
-  // }
   },
   { timestamps: true },
 );
