@@ -1,15 +1,14 @@
 const Task = require('../models/task');
 
-const { HttpStatusCode } = require('../utils/HttpStatusCode');
-const { HTTP404Error } = require('../errors/HTTP404Error');
-const { HTTP403Error } = require('../errors/HTTP403Error');
+const HttpStatusCode = require('../utils/HttpStatusCode');
+const { HTTP403Error, HTTP404Error } = require('../utils/errors');
 
 module.exports.createTask = async (req, res, next) => {
   try {
-    const data = await Task.create({ ...req.body, createdBy: req.user._id });
+    const item = await Task.create({ ...req.body, createdBy: req.user._id });
     const {
       name, description, createdBy: owner, _id: id,
-    } = data;
+    } = item;
 
     res.status(HttpStatusCode.OK).send({
       task: {
@@ -57,7 +56,20 @@ module.exports.updateTask = async (req, res, next) => {
       return;
     }
 
-    res.status(HttpStatusCode.OK).send(item);
+    if (item.createdBy.toHexString() !== req.user._id) {
+      next(new HTTP403Error('Можно редактировать только свои задачи'));
+      return;
+    }
+
+    const {
+      name, description, createdBy: owner, _id: id,
+    } = item;
+
+    res.status(HttpStatusCode.OK).send({
+      task: {
+        name, description, id, owner,
+      },
+    });
   } catch (error) {
     next(error);
   }

@@ -2,10 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const { HttpStatusCode } = require('../utils/HttpStatusCode');
-const { HTTP401Error } = require('../errors/HTTP401Error');
-const { HTTP409Error } = require('../errors/HTTP409Error');
-const { HTTP404Error } = require('../errors/HTTP404Error');
+const HttpStatusCode = require('../utils/HttpStatusCode');
+const { HTTP401Error, HTTP404Error, HTTP409Error } = require('../utils/errors');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -16,13 +14,12 @@ module.exports.createUser = async (req, res, next) => {
     const {
       name, email, _id: id,
     } = user;
-
     res.status(HttpStatusCode.OK).send({
       user: { name, email, id },
     });
   } catch (error) {
     if (error.name === 'MongoServerError' || error.message.includes('11000')) {
-      next(new HTTP409Error(`${req.body.email} уже зарегестрирован`));
+      next(new HTTP409Error(`Пользователь с ${req.body.email} уже зарегестрирован`));
       return;
     }
     next(error);
@@ -104,7 +101,7 @@ module.exports.login = async (req, res, next) => {
       maxAge: 3600000 * 24 * 7,
       httpOnly: true,
       sameSite: true,
-    }).send({ message: '🍪' }).end();
+    }).send({ message: 'set 🍪' }).end();
   } catch (error) {
     next(error);
   }

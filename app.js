@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
@@ -8,9 +9,8 @@ const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 const cors = require('cors');
 const routes = require('./routes');
-const errorHandler = require('./middlewares/errorHandler');
+const HttpStatusCode = require('./utils/HttpStatusCode');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { logNow, logError } = require('./utils/log');
 
 const app = express();
 
@@ -35,14 +35,26 @@ app.use(cors());
 const { DB = 'mongodb://localhost:27017/todolistdb', PORT = 3017 } = process.env;
 
 mongoose.connect(DB, { autoIndex: true })
-  .then(() => logNow('Connected to database'))
-  .catch((err) => logError(err));
+  .then(() => console.log('Connected to database'))
+  .catch((err) => console.log(err));
 
 app.use(routes);
 app.use(errorLogger);
 app.use(errors());
-app.use(errorHandler);
+
+/**
+ * централизовано обрабатываю ошибки здесь ради удобства чтения
+ */
+app.use((err, req, res, next) => {
+  const { statusCode = HttpStatusCode.INTERNAL_SERVER, message } = err;
+
+  res.status(statusCode).send({
+    message: statusCode === HttpStatusCode.INTERNAL_SERVER
+      ? 'Внутренняя ошибка сервера' : message,
+  });
+  next();
+});
 
 app.listen(PORT, () => {
-  logNow(`CORS-enabled app server listening on port ${PORT}`);
+  console.log(`CORS-enabled app listening on port ${PORT}`);
 });

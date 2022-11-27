@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const randomEmoji = require('../utils/randomEmoji');
 
+/**
+ * вот здесь стоит что-то написать про рандом эмодзи по дефолту
+ */
 const taskSchema = new mongoose.Schema(
   {
     name: {
