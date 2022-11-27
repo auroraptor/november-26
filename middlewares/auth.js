@@ -2,10 +2,15 @@ const jwt = require('jsonwebtoken');
 const { HTTP401Error } = require('../utils/errors');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-
 /**
- * а вот здесь мб стоит написать про то что я реализую все через 401 намерено
- * не разбиваю ситуации когда пользователь не найден и когда с токеном что-то не так
+ * @module auth
+ * @function
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} req.cookies
+ * @param {String} req.cookies.jwt
+ * @param {Function} next
+ * @returns
  */
 module.exports = (req, res, next) => {
   let payload;

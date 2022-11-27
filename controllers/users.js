@@ -7,16 +7,25 @@ const { HTTP401Error, HTTP404Error, HTTP409Error } = require('../utils/errors');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
+/**
+ * @module createUser
+ * @function
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} req.body
+ * @param {String} req.body.name
+ * @param {String} req.body.email
+ * @param {String} req.body.password
+ * @param {Function} next
+ */
 module.exports.createUser = async (req, res, next) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10);
     const user = await User.create({ ...req.body, password: hash });
     const {
-      name, email, _id: id,
+      name, email, id,
     } = user;
-    res.status(HttpStatusCode.OK).send({
-      user: { name, email, id },
-    });
+    res.status(HttpStatusCode.OK).send({ name, email, id });
   } catch (error) {
     if (error.name === 'MongoServerError' || error.message.includes('11000')) {
       next(new HTTP409Error(`Пользователь с ${req.body.email} уже зарегестрирован`));
@@ -26,6 +35,18 @@ module.exports.createUser = async (req, res, next) => {
   }
 };
 
+/**
+ * @module getUsers
+ * @function
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} req.query
+ * @param {Number=} req.query.page
+ * @param {Number=} req.query.pageSize
+ * @param {String=} req.query.name
+ * @param {String=} req.query.email
+ * @param {Function} next
+ */
 module.exports.getUsers = async (req, res, next) => {
   try {
     const pageSize = req.query.pageSize ? parseInt(req.query.pageSize, 10) : 0;
@@ -46,39 +67,64 @@ module.exports.getUsers = async (req, res, next) => {
   }
 };
 
+/**
+ * @module getCurrentUser
+ * @function
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} req.user
+ * @param {String} req.user.id
+ * @param {Function} next
+ */
 module.exports.getCurrentUser = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user.id);
     if (!user) {
-      next(new HTTP404Error(`Пользователь с id ${req.user._id} не найден`));
+      next(new HTTP404Error(`Пользователь с id ${req.user.id} не найден`));
       return;
     }
-    const { name, email, _id: id } = user;
 
-    res.status(HttpStatusCode.OK).send({
-      user: { name, email, id },
-    });
+    res.status(HttpStatusCode.OK).send(user);
   } catch (error) {
     next(error);
   }
 };
 
+/**
+ * @module updateUser
+ * @function
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} req.user
+ * @param {String} req.user.id
+ * @param {Object} req.body
+ * @param {String=} req.body.name
+ * @param {String=} req.body.email
+ * @param {Function} next
+ */
 module.exports.updateUser = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(req.user._id, req.body, {
+    const user = await User.findByIdAndUpdate(req.user.id, req.body, {
       new: true,
       runValidators: true,
     });
-    const { name, email, _id: id } = user;
 
-    res.status(HttpStatusCode.OK).send({
-      user: { name, email, id },
-    });
+    res.status(HttpStatusCode.OK).send(user);
   } catch (error) {
     next(error);
   }
 };
 
+/**
+ * @module login
+ * @function
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} req.body
+ * @param {String} req.body.email
+ * @param {String} req.body.password
+ * @param {Function} next
+ */
 module.exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -95,13 +141,12 @@ module.exports.login = async (req, res, next) => {
       next(new HTTP401Error('Неправильные почта или пароль'));
       return;
     }
-    const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : '🔐', { expiresIn: '7d' });
-
+    const token = jwt.sign({ id: user.id }, NODE_ENV === 'production' ? JWT_SECRET : '🔐', { expiresIn: '7d' });
     res.status(HttpStatusCode.OK).cookie('jwt', token, {
       maxAge: 3600000 * 24 * 7,
       httpOnly: true,
       sameSite: true,
-    }).send({ message: 'set 🍪' }).end();
+    }).end();
   } catch (error) {
     next(error);
   }

@@ -1,30 +1,33 @@
 const mongoose = require('mongoose');
 const randomEmoji = require('../utils/randomEmoji');
 
-/**
- * вот здесь стоит что-то написать про рандом эмодзи по дефолту
- */
 const taskSchema = new mongoose.Schema(
   {
     name: {
-      type: String,
+      type: mongoose.Schema.Types.String,
       required: true,
       minlength: 2,
       maxlength: 30,
     },
     description: {
-      type: String,
+      type: mongoose.Schema.Types.String,
       default: randomEmoji,
       minlength: 2,
       maxlength: 120,
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
+      ref: 'User',
       required: true,
     },
   },
   { timestamps: true },
 );
 
-module.exports = mongoose.model('task', taskSchema);
+taskSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform(doc, ret) { delete ret._id; },
+});
+
+module.exports = mongoose.model('Task', taskSchema);

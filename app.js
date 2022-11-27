@@ -20,9 +20,6 @@ app.use(cookieParser());
 app.use(requestLogger);
 app.use(helmet());
 
-/**
- * пишу конфиг здесь ради удобства чтения
- */
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -42,9 +39,6 @@ app.use(routes);
 app.use(errorLogger);
 app.use(errors());
 
-/**
- * централизовано обрабатываю ошибки здесь ради удобства чтения
- */
 app.use((err, req, res, next) => {
   const { statusCode = HttpStatusCode.INTERNAL_SERVER, message } = err;
 

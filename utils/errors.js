@@ -1,9 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 const HttpStatusCode = require('./HttpStatusCode');
 
-/**
- * Описываю здесь всю империю ошибок разом чтобы удобно было читать
- */
+// Описываю здесь все ошибки чтобы удобно было читать
 class HTTP401Error extends Error {
   constructor(message) {
     super(message);
