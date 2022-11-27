@@ -4,10 +4,10 @@ require('dotenv').config();
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 const cors = require('cors');
 const routes = require('./routes');
-const limiter = require('./middlewares/limiter');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { logNow, logError } = require('./utils/log');
@@ -19,14 +19,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(requestLogger);
 app.use(helmet());
-app.use(limiter);
+
+/**
+ * пишу конфиг здесь ради удобства чтения
+ */
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+}));
+
 app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/todolistdb', { autoIndex: true })
-  .then(() => logNow('Connected to the server'))
-  .catch((err) => logError(err));
+const { DB = 'mongodb://localhost:27017/todolistdb', PORT = 3017 } = process.env;
 
-const { PORT = 3017 } = process.env;
+mongoose.connect(DB, { autoIndex: true })
+  .then(() => logNow('Connected to database'))
+  .catch((err) => logError(err));
 
 app.use(routes);
 app.use(errorLogger);
