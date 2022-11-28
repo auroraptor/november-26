@@ -40,6 +40,7 @@
     "mongoose": "^6.6.5",
     "multer": "^1.4.5-lts.1",
     "validator": "^13.7.0",
+    "vercel": "^28.5.6",
     "winston": "^3.8.2"
   }
 }
