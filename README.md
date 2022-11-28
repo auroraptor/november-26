@@ -47,7 +47,7 @@
 
 🧑🏻‍🚀 Postman коллекция запросов, дока https://www.getpostman.com/collections/d993a8ab72187296828a 
 
-![Postman Collection](https://imgur.com/WaO6ny0)
+![Postman Collection](https://i.imgur.com/WaO6ny0.png)
 
 - [ ] Будет возможность загружать файлы с клиента и затем раздавать статику
 
