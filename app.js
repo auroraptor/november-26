@@ -29,7 +29,7 @@ app.use(rateLimit({
 
 app.use(cors());
 
-const { DB = 'mongodb://localhost:27017/todolistdb', PORT = 3017 } = process.env;
+const { DB, PORT } = process.env;
 
 mongoose.connect(DB, { autoIndex: true })
   .then(() => console.log('Connected to database'))
