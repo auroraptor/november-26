@@ -29,7 +29,7 @@ app.use(rateLimit({
 
 app.use(cors());
 
-const { PORT = 3012, DB = 'mongodb://localhost:27017/todolist-dev', NODE_ENV } = process.env;
+const { PORT = 3017, DB = 'mongodb://localhost:27017/todolist-dev', NODE_ENV } = process.env;
 
 mongoose.connect(DB, { autoIndex: true })
   .then(() => console.info(`[${NODE_ENV ? 'PROD' : 'DEV'} MODE]: Connected to the ${DB}`))
@@ -49,4 +49,4 @@ app.use((err, req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => console.info(`App listening on port ${PORT}`));
+app.listen(PORT, () => console.info(`CORS-enabled App listening on port ${PORT}`));
