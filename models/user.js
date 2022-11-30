@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+const { isEmail } = require('validator');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -13,9 +13,7 @@ const userSchema = new mongoose.Schema({
     require: true,
     unique: true,
     validate: {
-      validator(email) {
-        return validator.isEmail(email);
-      },
+      validator: (email) => isEmail(email),
       message: 'Is not a valid email address',
     },
   },
@@ -29,7 +27,6 @@ const userSchema = new mongoose.Schema({
 userSchema.set('toJSON', {
   virtuals: true,
   versionKey: false,
-  // eslint-disable-next-line no-param-reassign
   transform(doc, ret) { delete ret._id; },
 });
 
