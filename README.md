@@ -37,7 +37,7 @@
 
 `GET /tasks?` возвращает todo-лист пользователя, query постранично, фильтры 
 
-`PATCH /tasks/:taskId` добавляет таске (name обязательное поле, description опционально, по дефолту рандом эмодзи)
+`POST /tasks/:taskId` добавляет таскy (name обязательное поле, description опционально, по дефолту рандом эмодзи)
 
 `PATCH /tasks/:taskId` обновляет информацию о таске по id (name, description)
 
