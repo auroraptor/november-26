@@ -29,11 +29,11 @@ app.use(rateLimit({
 
 app.use(cors());
 
-const { DB, PORT } = process.env;
+const { PORT = 3012, DB = 'mongodb://localhost:27017/todolist-dev', NODE_ENV } = process.env;
 
 mongoose.connect(DB, { autoIndex: true })
-  .then(() => console.log('Connected to database'))
-  .catch((err) => console.log(err));
+  .then(() => console.info(`[${NODE_ENV ? 'PROD' : 'DEV'} MODE]: Connected to the ${DB}`))
+  .catch((err) => console.info(err));
 
 app.use(routes);
 app.use(errorLogger);
@@ -44,11 +44,9 @@ app.use((err, req, res, next) => {
 
   res.status(statusCode).send({
     message: statusCode === HttpStatusCode.INTERNAL_SERVER
-      ? 'Внутренняя ошибка сервера' : message,
+      ? 'Internal Server Error' : message,
   });
   next();
 });
 
-app.listen(PORT, () => {
-  console.log(`CORS-enabled app listening on port ${PORT}`);
-});
+app.listen(PORT, () => console.info(`App listening on port ${PORT}`));
